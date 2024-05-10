@@ -67,71 +67,75 @@ class _LoginScreenState extends State<LoginScreen> {
         builder: (context, state) {
           return Center(
             child: SingleChildScrollView(
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    // const Spacer(),
-                    kheight20,
-                    Form(
-                      key: _formkey,
-                      child: Column(
-                        children: [
-                          const Align(
-                            alignment: Alignment.topLeft,
-                            child: Text(
-                              'Login',
-                              style: TextStyle(
-                                  fontSize: 20, fontWeight: FontWeight.w500),
+              child: Container(
+                constraints: const BoxConstraints(maxWidth: 500),
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      kheight20,
+                      Form(
+                        key: _formkey,
+                        child: Column(
+                          children: [
+                            const Align(
+                              alignment: Alignment.topLeft,
+                              child: Text(
+                                'Login',
+                                style: TextStyle(
+                                    fontSize: 20, fontWeight: FontWeight.w500),
+                              ),
                             ),
-                          ),
-                          kheight20,
-                          customTextFormField(
-                              context: context,
-                              labeltext: 'Email',
-                              controller: emailController,
-                              fieldEmptyMessage: 'Email is Needed !',
-                              validationMessage: 'Enter valid Email',
-                              regEx: emailValidator),
-                          kheight20,
-                          customTextFormField(
-                              context: context,
-                              labeltext: 'Password',
-                              controller: passwordController,
-                              fieldEmptyMessage: 'Password is Needed !',
-                              validationMessage: 'Enter valid Password',
-                              regEx: passwordValidator),
-                          kheight40,
-                          state is LoginLoadingState
-                              ? loadingElevatedButton(context)
-                              : customElevatedButton(
-                                  context,
-                                  backgroundColor: kBlack,
-                                  textColor: kWhite,
-                                  title: 'Login',
-                                  onpressed: () {
-                                    final isvalid =
-                                        _formkey.currentState?.validate();
-                                    if (isvalid!) {
-                                      loginBloc.add(
-                                        UserLoginEvent(
-                                            email: emailController.text,
-                                            password: passwordController.text),
-                                      );
-                                    }
-                                  },
-                                ),
-                        ],
+                            kheight20,
+                            customTextFormField(
+                                context: context,
+                                labeltext: 'Email',
+                                controller: emailController,
+                                fieldEmptyMessage: 'Email is Needed !',
+                                validationMessage: 'Enter valid Email',
+                                regEx: emailValidator),
+                            kheight20,
+                            customTextFormField(
+                                context: context,
+                                labeltext: 'Password',
+                                controller: passwordController,
+                                fieldEmptyMessage: 'Password is Needed !',
+                                validationMessage: 'Enter valid Password',
+                                regEx: passwordValidator),
+                            kheight40,
+                            state is LoginLoadingState
+                                ? loadingElevatedButton(context)
+                                : customElevatedButton(
+                                    context,
+                                    backgroundColor: kBlack,
+                                    textColor: kWhite,
+                                    title: 'Login',
+                                    onpressed: () {
+                                      final isvalid =
+                                          _formkey.currentState?.validate();
+                                      if (isvalid!) {
+                                        loginBloc.add(
+                                          UserLoginEvent(
+                                              email: emailController.text,
+                                              password:
+                                                  passwordController.text),
+                                        );
+                                      }
+                                    },
+                                  ),
+                          ],
+                        ),
                       ),
-                    ),
-                    kheight20,
-                    authBottomText(context,
-                        text1: 'Dont have an Account?  ',
-                        text2: 'SignUp', onTap: () {
-                      customRoutePushReplacement(context, const SignupScreen());
-                    }),
-                  ],
+                      kheight20,
+                      authBottomText(context,
+                          text1: 'Dont have an Account?  ',
+                          text2: 'SignUp', onTap: () {
+                        customRoutePushReplacement(
+                            context, const SignupScreen());
+                      }),
+                    ],
+                  ),
                 ),
               ),
             ),

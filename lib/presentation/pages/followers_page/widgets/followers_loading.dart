@@ -10,32 +10,37 @@ Shimmer followersLoading() {
     child: ListView.builder(
       itemCount: 10,
       itemBuilder: (context, index) {
-        return Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Row(
-            children: [
-              const CircleAvatar(
-                backgroundColor: kWhite,
-                radius: 28,
-                child: CircleAvatar(
-                  radius: 26,
-                  backgroundColor: kTeal,
-                ),
+        return Center(
+          child: Container(
+            constraints: const BoxConstraints(maxWidth: 500),
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Row(
+                children: [
+                  const CircleAvatar(
+                    backgroundColor: kWhite,
+                    radius: 28,
+                    child: CircleAvatar(
+                      radius: 26,
+                      backgroundColor: kTeal,
+                    ),
+                  ),
+                  kWidth10,
+                  Container(
+                    height: 20,
+                    width: 150,
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(5), color: kWhite),
+                  ),
+                  const Spacer(),
+                  Container(
+                    height: 28,
+                    width: 70,
+                    color: kWhite,
+                  )
+                ],
               ),
-              kWidth10,
-              Container(
-                height: 20,
-                width: 150,
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(5), color: kWhite),
-              ),
-              const Spacer(),
-              Container(
-                height: 28,
-                width: 70,
-                color: kWhite,
-              )
-            ],
+            ),
           ),
         );
       },

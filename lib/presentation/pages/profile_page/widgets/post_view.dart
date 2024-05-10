@@ -66,241 +66,251 @@ class PostView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: const BoxDecoration(
-        color: kWhite,
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Row(
-              children: [
-                CircleAvatar(
-                  radius: 20,
-                  backgroundImage: NetworkImage(profilePic),
-                ),
-                kWidth10,
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      children: [
-                        Text(
-                          userName,
-                          style: const TextStyle(
-                            fontWeight: FontWeight.w500,
-                            fontSize: 17,
+    return Align(
+      child: Container(
+        constraints: const BoxConstraints(maxWidth: 500),
+        decoration: const BoxDecoration(
+          color: kWhite,
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Row(
+                children: [
+                  CircleAvatar(
+                    radius: 20,
+                    backgroundImage: NetworkImage(profilePic),
+                  ),
+                  kWidth10,
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          Text(
+                            userName,
+                            style: const TextStyle(
+                              fontWeight: FontWeight.w500,
+                              fontSize: 17,
+                            ),
                           ),
-                        ),
-                        kWidth5,
-                        post.createdAt != post.updatedAt
-                            ? const Text(
-                                '(Edited)',
-                                style: TextStyle(
-                                    color: Color.fromARGB(255, 84, 83, 83),
-                                    fontSize: 13),
-                              )
-                            : const SizedBox()
-                      ],
-                    ),
-                    Text(
-                      timeago.format(creartedAt!, locale: 'en'),
-                      style: const TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w500,
+                          kWidth5,
+                          post.createdAt != post.updatedAt
+                              ? const Text(
+                                  '(Edited)',
+                                  style: TextStyle(
+                                      color: Color.fromARGB(255, 84, 83, 83),
+                                      fontSize: 13),
+                                )
+                              : const SizedBox()
+                        ],
                       ),
-                    )
-                  ],
-                ),
-                const Spacer(),
-                saved == false
-                    ? PopupMenuButton(
-                        color: kbackgroundColor,
-                        onSelected: (value) {},
-                        itemBuilder: (context) {
-                          return [
-                            PopupMenuItem(
+                      Text(
+                        timeago.format(creartedAt!, locale: 'en'),
+                        style: const TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      )
+                    ],
+                  ),
+                  const Spacer(),
+                  saved == false
+                      ? PopupMenuButton(
+                          color: kbackgroundColor,
+                          onSelected: (value) {},
+                          itemBuilder: (context) {
+                            return [
+                              PopupMenuItem(
+                                  onTap: () {
+                                    customRoutePush(
+                                        context, PostEditScreen(post: post));
+                                  },
+                                  value: 'Edit',
+                                  child: const Row(
+                                    children: [
+                                      Icon(Icons.edit),
+                                      kWidth5,
+                                      Text('Edit')
+                                    ],
+                                  )),
+                              PopupMenuItem(
                                 onTap: () {
-                                  customRoutePush(
-                                      context, PostEditScreen(post: post));
+                                  QuickAlert.show(
+                                    onConfirmBtnTap: () {
+                                      context.read<DeletePostBloc>().add(
+                                          DeletePostButtonClickEvent(
+                                              postId: post.id));
+                                      Navigator.pop(context);
+                                    },
+                                    headerBackgroundColor: kGrey,
+                                    width: 250,
+                                    context: context,
+                                    type: QuickAlertType.confirm,
+                                    text: 'Do you want to Delete post',
+                                    confirmBtnText: 'Yes',
+                                    cancelBtnText: 'No',
+                                    confirmBtnColor: Colors.grey,
+                                  );
                                 },
-                                value: 'Edit',
+                                value: 'Delete',
                                 child: const Row(
                                   children: [
-                                    Icon(Icons.edit),
+                                    Icon(Icons.delete),
                                     kWidth5,
-                                    Text('Edit')
+                                    Text('Delete')
                                   ],
-                                )),
-                            PopupMenuItem(
-                              onTap: () {
-                                QuickAlert.show(
-                                  onConfirmBtnTap: () {
-                                    context.read<DeletePostBloc>().add(
-                                        DeletePostButtonClickEvent(
-                                            postId: post.id));
-                                    Navigator.pop(context);
-                                  },
-                                  headerBackgroundColor: kGrey,
-                                  width: 250,
-                                  context: context,
-                                  type: QuickAlertType.confirm,
-                                  text: 'Do you want to Delete post',
-                                  confirmBtnText: 'Yes',
-                                  cancelBtnText: 'No',
-                                  confirmBtnColor: Colors.grey,
-                                );
-                              },
-                              value: 'Delete',
-                              child: const Row(
-                                children: [
-                                  Icon(Icons.delete),
-                                  kWidth5,
-                                  Text('Delete')
-                                ],
-                              ),
-                            ),
-                          ];
-                        },
-                      )
-                    : const SizedBox()
-              ],
-            ),
-          ),
-          Container(
-            width: MediaQuery.of(context).size.width,
-            constraints: const BoxConstraints(minHeight: 250, maxHeight: 400),
-            color: kWhite,
-            child: Image(
-              image: NetworkImage(image),
-              fit: BoxFit.cover,
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: MultiBlocConsumer(
-              buildWhen: null,
-              blocs: [
-                context.watch<LikePostBloc>(),
-                context.watch<SavedPostBloc>()
-              ],
-              listener: (context, state) {},
-              builder: (context, state) {
-                return Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      children: [
-                        GestureDetector(
-                          onTap: () {
-                            // isLiked = !isLiked;
-                            if (!likes.contains(logginedUserId)) {
-                              likes.add(logginedUserId);
-                              context.read<LikePostBloc>().add(
-                                    LikePostButtonClickEvent(postId: id),
-                                  );
-                            } else {
-                              likes.remove(logginedUserId);
-                              context.read<LikePostBloc>().add(
-                                    UnlikePostButtonClickEvent(postId: id),
-                                  );
-                            }
-                          },
-                          child: Icon(
-                            likes.contains(logginedUserId)
-                                ? Iconsax.heart5
-                                : Iconsax.heart4,
-                            color: likes.contains(logginedUserId) ? kRed : null,
-                          ),
-                        ),
-                        kWidth10,
-                        GestureDetector(
-                          onTap: () {
-                            context
-                                .read<GetCommentsBloc>()
-                                .add(CommentsFetchEvent(postId: id));
-                            commentBottomSheet(context, post, commentController,
-                                formkey: _formkey, comments: _comments, id: id);
-                          },
-                          child: const Icon(
-                            Iconsax.message,
-                          ),
-                        ),
-                        const Spacer(),
-                        posts != null
-                            ? GestureDetector(
-                                onTap: () {
-                                  if (posts!.any(
-                                      (element) => element.postId.id == id)) {
-                                    context.read<SavedPostBloc>().add(
-                                        RemoveSavedPostButtonClickEvent(
-                                            postId: id));
-                                    posts!.removeWhere(
-                                        (element) => element.postId.id == id);
-                                  } else {
-                                    posts!.add(SavedPostModel(
-                                        userId: userId,
-                                        postId: PostId(
-                                            id: id,
-                                            userId: UserId.fromJson(
-                                                logginedUser!.toJson()),
-                                            image: image,
-                                            description: description,
-                                            likes: [],
-                                            hidden: hidden!,
-                                            blocked: blocked!,
-                                            tags: tags!,
-                                            date: date!,
-                                            createdAt: creartedAt!,
-                                            updatedAt: updatedAt!,
-                                            v: 0,
-                                            taggedUsers: taggedUsers!),
-                                        createdAt: DateTime.now(),
-                                        updatedAt: DateTime.now(),
-                                        v: 0));
-                                    context.read<SavedPostBloc>().add(
-                                        SavePostButtonClickEvent(postId: id));
-                                  }
-                                },
-                                child: Icon(
-                                  size: 26,
-                                  posts!.any(
-                                          (element) => element.postId.id == id)
-                                      ? Icons.bookmark
-                                      : Icons.bookmark_border,
                                 ),
-                              )
-                            : const SizedBox()
-                      ],
-                    ),
-                    kheight10,
-                    likes.isNotEmpty
-                        ? Text(
-                            '${likes.length} likes',
-                            style: const TextStyle(
-                              fontSize: 15,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          )
-                        : const SizedBox(),
-                    ReadMoreText(
-                      description,
-                      trimMode: TrimMode.Line,
-                      trimLines: 2,
-                      colorClickableText: Colors.pink,
-                      trimCollapsedText: 'more',
-                      trimExpandedText: 'less',
-                      moreStyle: const TextStyle(
-                          fontSize: 14, fontWeight: FontWeight.w500),
-                    )
-                  ],
-                );
-              },
+                              ),
+                            ];
+                          },
+                        )
+                      : const SizedBox()
+                ],
+              ),
             ),
-          )
-        ],
+            Container(
+              width: MediaQuery.of(context).size.width,
+              constraints: const BoxConstraints(
+                  minHeight: 250, maxHeight: 500, maxWidth: 600),
+              color: kWhite,
+              child: Image(
+                image: NetworkImage(image),
+                fit: BoxFit.cover,
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: MultiBlocConsumer(
+                buildWhen: null,
+                blocs: [
+                  context.watch<LikePostBloc>(),
+                  context.watch<SavedPostBloc>()
+                ],
+                listener: (context, state) {},
+                builder: (context, state) {
+                  return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          GestureDetector(
+                            onTap: () {
+                              // isLiked = !isLiked;
+                              if (!likes.contains(logginedUserId)) {
+                                likes.add(logginedUserId);
+                                context.read<LikePostBloc>().add(
+                                      LikePostButtonClickEvent(postId: id),
+                                    );
+                              } else {
+                                likes.remove(logginedUserId);
+                                context.read<LikePostBloc>().add(
+                                      UnlikePostButtonClickEvent(postId: id),
+                                    );
+                              }
+                            },
+                            child: Icon(
+                              likes.contains(logginedUserId)
+                                  ? Iconsax.heart5
+                                  : Iconsax.heart4,
+                              color:
+                                  likes.contains(logginedUserId) ? kRed : null,
+                            ),
+                          ),
+                          kWidth10,
+                          GestureDetector(
+                            onTap: () {
+                              context
+                                  .read<GetCommentsBloc>()
+                                  .add(CommentsFetchEvent(postId: id));
+                              commentBottomSheet(
+                                  context, post, commentController,
+                                  formkey: _formkey,
+                                  comments: _comments,
+                                  profiePic: profilePic,
+                                  userName: userName,
+                                  id: id);
+                            },
+                            child: const Icon(
+                              Iconsax.message,
+                            ),
+                          ),
+                          const Spacer(),
+                          posts != null
+                              ? GestureDetector(
+                                  onTap: () {
+                                    if (posts!.any(
+                                        (element) => element.postId.id == id)) {
+                                      context.read<SavedPostBloc>().add(
+                                          RemoveSavedPostButtonClickEvent(
+                                              postId: id));
+                                      posts!.removeWhere(
+                                          (element) => element.postId.id == id);
+                                    } else {
+                                      posts!.add(SavedPostModel(
+                                          userId: userId,
+                                          postId: PostId(
+                                              id: id,
+                                              userId: UserId.fromJson(
+                                                  logginedUser!.toJson()),
+                                              image: image,
+                                              description: description,
+                                              likes: [],
+                                              hidden: hidden!,
+                                              blocked: blocked!,
+                                              tags: tags!,
+                                              date: date!,
+                                              createdAt: creartedAt!,
+                                              updatedAt: updatedAt!,
+                                              v: 0,
+                                              taggedUsers: taggedUsers!),
+                                          createdAt: DateTime.now(),
+                                          updatedAt: DateTime.now(),
+                                          v: 0));
+                                      context.read<SavedPostBloc>().add(
+                                          SavePostButtonClickEvent(postId: id));
+                                    }
+                                  },
+                                  child: Icon(
+                                    size: 26,
+                                    posts!.any((element) =>
+                                            element.postId.id == id)
+                                        ? Icons.bookmark
+                                        : Icons.bookmark_border,
+                                  ),
+                                )
+                              : const SizedBox()
+                        ],
+                      ),
+                      kheight10,
+                      likes.isNotEmpty
+                          ? Text(
+                              '${likes.length} likes',
+                              style: const TextStyle(
+                                fontSize: 15,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            )
+                          : const SizedBox(),
+                      ReadMoreText(
+                        description,
+                        trimMode: TrimMode.Line,
+                        trimLines: 2,
+                        colorClickableText: Colors.pink,
+                        trimCollapsedText: 'more',
+                        trimExpandedText: 'less',
+                        moreStyle: const TextStyle(
+                            fontSize: 14, fontWeight: FontWeight.w500),
+                      )
+                    ],
+                  );
+                },
+              ),
+            )
+          ],
+        ),
       ),
     );
   }

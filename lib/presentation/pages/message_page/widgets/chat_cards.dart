@@ -8,12 +8,12 @@ import 'package:social_media/presentation/pages/message_page/widgets/replay_card
 Widget getMessageCard(AllMessagesModel message) {
   if (message.senderId == logginedUserId) {
     return OwnMessageCard(
-      message: message.text,
+      message: message.text.trim(),
       time: message.createdAt,
     );
   } else {
     return ReplayCard(
-      message: message.text,
+      message: message.text.trim(),
       time: message.updatedAt,
     );
   }

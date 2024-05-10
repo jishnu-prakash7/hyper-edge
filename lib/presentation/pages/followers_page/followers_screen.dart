@@ -62,34 +62,40 @@ class _FollowersScreenState extends State<FollowersScreen> {
                     itemCount: followers.totalCount,
                     itemBuilder: (context, index) {
                       final Follower follower = followers.followers[index];
-                      return GestureDetector(
-                        onTap: () {
-                          customRoutePush(
-                              context,
-                              UserProfielScreen(
-                                  userId: follower.id, user: follower));
-                        },
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Row(
-                            children: [
-                              CircleAvatar(
-                                backgroundColor: kWhite,
-                                radius: 28,
-                                child: CircleAvatar(
-                                  backgroundImage:
-                                      NetworkImage(follower.profilePic),
-                                  radius: 26,
-                                ),
+                      return Center(
+                        child: Container(
+                          constraints: const BoxConstraints(maxWidth: 500),
+                          child: GestureDetector(
+                            onTap: () {
+                              customRoutePush(
+                                  context,
+                                  UserProfielScreen(
+                                      userId: follower.id, user: follower));
+                            },
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Row(
+                                children: [
+                                  CircleAvatar(
+                                    backgroundColor: kWhite,
+                                    radius: 28,
+                                    child: CircleAvatar(
+                                      backgroundImage:
+                                          NetworkImage(follower.profilePic),
+                                      radius: 26,
+                                    ),
+                                  ),
+                                  kWidth10,
+                                  Text(
+                                    follower.userName,
+                                    style: const TextStyle(
+                                        fontWeight: FontWeight.w500,
+                                        fontSize: 16),
+                                  ),
+                                  const Spacer(),
+                                ],
                               ),
-                              kWidth10,
-                              Text(
-                                follower.userName,
-                                style: const TextStyle(
-                                    fontWeight: FontWeight.w500, fontSize: 16),
-                              ),
-                              const Spacer(),
-                            ],
+                            ),
                           ),
                         ),
                       );

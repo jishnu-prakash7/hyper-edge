@@ -64,82 +64,82 @@ class _ChatScreenState extends State<ChatScreen> {
       ),
       body: Form(
         key: _formkey,
-        child: SizedBox(
-          height: MediaQuery.of(context).size.height,
-          width: MediaQuery.of(context).size.width,
-          child: Column(
-            children: [
-              Expanded(
-                child: BlocConsumer<ConversationBloc, ConversationState>(
-                  listener: (context, state) {},
-                  builder: (context, state) {
-                    if (state is GetAllMessagesLoadingState) {
-                      return const Center(
-                        child: CircularProgressIndicator(),
-                      );
-                    }
-                    if (state is GetAllMessagesSuccesfulState) {
-                      List<DateTime> dates = [];
-                      List<List<AllMessagesModel>> messagesByDate = [];
-
-                      for (var message in state.messagesList) {
-                        DateTime date = DateTime(message.createdAt.year,
-                            message.createdAt.month, message.createdAt.day);
-                        if (!dates.contains(date)) {
-                          dates.add(date);
-                          messagesByDate.add([message]);
-                        } else {
-                          messagesByDate.last.add(message);
-                        }
+        child: Center(
+          child: Container(
+            constraints: const BoxConstraints(maxWidth: 500),
+            height: MediaQuery.of(context).size.height,
+            width: MediaQuery.of(context).size.width,
+            child: Column(
+              children: [
+                Expanded(
+                  child: BlocConsumer<ConversationBloc, ConversationState>(
+                    listener: (context, state) {},
+                    builder: (context, state) {
+                      if (state is GetAllMessagesLoadingState) {
+                        return const Center(
+                          child: CircularProgressIndicator(),
+                        );
                       }
-
-                      dates = dates.reversed.toList();
-                      messagesByDate = messagesByDate.reversed.toList();
-
-                      return ListView.builder(
-                        controller: scrollController,
-                        itemCount: dates.length,
-                        reverse: true,
-                        itemBuilder: (context, index) {
-                          return Column(
-                            children: [
-                              DateDivider(date: dates[index]),
-                              ...messagesByDate[index]
-                                  .map((message) => getMessageCard(message)),
-                            ],
-                          );
-                        },
-                      );
-                    } else {
-                      return const SizedBox();
-                    }
-                  },
+                      if (state is GetAllMessagesSuccesfulState) {
+                        List<DateTime> dates = [];
+                        List<List<AllMessagesModel>> messagesByDate = [];
+                        for (var message in state.messagesList) {
+                          DateTime date = DateTime(message.createdAt.year,
+                              message.createdAt.month, message.createdAt.day);
+                          if (!dates.contains(date)) {
+                            dates.add(date);
+                            messagesByDate.add([message]);
+                          } else {
+                            messagesByDate.last.add(message);
+                          }
+                        }
+                        dates = dates.reversed.toList();
+                        messagesByDate = messagesByDate.reversed.toList();
+                        return ListView.builder(
+                          controller: scrollController,
+                          itemCount: dates.length,
+                          reverse: true,
+                          itemBuilder: (context, index) {
+                            return Column(
+                              children: [
+                                DateDivider(date: dates[index]),
+                                ...messagesByDate[index]
+                                    .map((message) => getMessageCard(message)),
+                              ],
+                            );
+                          },
+                        );
+                      } else {
+                        return const SizedBox();
+                      }
+                    },
+                  ),
                 ),
-              ),
-              SizedBox(
-                height: 60,
-                child: Row(
+                Row(
                   children: [
-                    SizedBox(
-                      width: MediaQuery.of(context).size.width - 55,
-                      child: Card(
-                        margin:
-                            const EdgeInsets.only(left: 2, right: 2, bottom: 8),
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(25)),
-                        child: TextFormField(
-                          controller: _messageController,
-                          keyboardType: TextInputType.multiline,
-                          maxLines: 5,
-                          minLines: 1,
-                          decoration: const InputDecoration(
-                              prefix: SizedBox(
-                                width: 10,
-                              ),
-                              border: UnderlineInputBorder(
-                                  borderSide: BorderSide.none),
-                              hintText: 'Type a message...',
-                              contentPadding: EdgeInsets.all(5)),
+                    Center(
+                      child: Container(
+                        constraints: const BoxConstraints(maxWidth: 440),
+                        width: MediaQuery.of(context).size.width - 55,
+                        child: Card(
+                          margin: const EdgeInsets.only(
+                              left: 2, right: 2, bottom: 8),
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(25)),
+                          child: TextFormField(
+                            controller: _messageController,
+                            keyboardType: TextInputType.multiline,
+                            maxLines: 5,
+                            minLines: 1,
+                            decoration: const InputDecoration(
+                                prefix: SizedBox(
+                                  width: 10,
+                                ),
+                                border: UnderlineInputBorder(
+                                    borderSide: BorderSide.none),
+                                hintText: 'Type a message...',
+                                contentPadding: EdgeInsets.all(5)),
+                          ),
                         ),
                       ),
                     ),
@@ -183,9 +183,9 @@ class _ChatScreenState extends State<ChatScreen> {
                       ),
                     )
                   ],
-                ),
-              )
-            ],
+                )
+              ],
+            ),
           ),
         ),
       ),

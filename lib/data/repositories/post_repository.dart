@@ -5,7 +5,7 @@ import 'dart:developer';
 import 'package:flutter/widgets.dart';
 import 'package:http/http.dart' as http;
 import 'package:photo_manager/photo_manager.dart';
-import 'package:social_media/core/utils/urls.dart';
+import 'package:social_media/core/utils/api_end_points.dart';
 import 'package:social_media/presentation/widgets/common_widgets.dart';
 
 class PostRepo {

@@ -47,8 +47,6 @@ class _SignupScreenState extends State<SignupScreen> {
               );
             },
             icon: const Icon(Icons.arrow_back_ios_new_rounded)),
-        // title: mainTitle(),
-        // centerTitle: true,
         backgroundColor: kbackgroundColor,
       ),
       body: BlocConsumer<SignupBloc, SignupState>(
@@ -67,28 +65,28 @@ class _SignupScreenState extends State<SignupScreen> {
           } else if (state is SignupAlreadyAccountState) {
             customSnackBar(context, 'Already have an account', Colors.red);
           } else if (state is SignupServerErrorState) {
-            customSnackBar(context,
-                'Something wrong please try after sometime', Colors.red);
+            customSnackBar(context, 'Something wrong please try after sometime',
+                Colors.red);
           } else if (state is SignupAlreadyAccountState) {
             customSnackBar(context,
                 "OTP already sent within the last one minute", Colors.red);
           }
         },
         builder: (context, state) {
-          return SingleChildScrollView(
-            child: Form(
-              key: _formkey,
-              child: SizedBox(
-                height: MediaQuery.of(context).size.height,
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Column(
-                    children: [
-                      // const Spacer(),
-                      kheight40,
-                      Container(
-                        alignment: Alignment.center,
-                        child: Column(
+          return Center(
+            child: SingleChildScrollView(
+              child: Form(
+                key: _formkey,
+                child: Container(
+                  constraints: const BoxConstraints(maxWidth: 500),
+                  height: MediaQuery.of(context).size.height,
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        kheight40,
+                        Column(
                           children: [
                             const Align(
                               alignment: Alignment.topLeft,
@@ -172,16 +170,16 @@ class _SignupScreenState extends State<SignupScreen> {
                                   )
                           ],
                         ),
-                      ),
-                      kheight20,
-                      // const Spacer(),
-                      authBottomText(context,
-                          text1: 'Already have an Account?',
-                          text2: 'Login', onTap: () {
-                        customRoutePushReplacement(
-                            context, const LoginScreen());
-                      }),
-                    ],
+                        kheight20,
+                        // const Spacer(),
+                        authBottomText(context,
+                            text1: 'Already have an Account?',
+                            text2: 'Login', onTap: () {
+                          customRoutePushReplacement(
+                              context, const LoginScreen());
+                        }),
+                      ],
+                    ),
                   ),
                 ),
               ),

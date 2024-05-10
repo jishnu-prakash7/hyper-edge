@@ -73,61 +73,68 @@ class _SuggessionScreenState extends State<SuggessionScreen> {
                     itemBuilder: (context, index) {
                       suggessionList = suggessionModel.data;
                       final UserDetailsModel user = suggessionList[index];
-                      return Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Row(
-                          children: [
-                            CircleAvatar(
-                              backgroundColor: kWhite,
-                              radius: 28,
-                              child: CircleAvatar(
-                                backgroundImage: NetworkImage(user.profilePic),
-                                radius: 26,
-                              ),
+                      return Align(
+                        child: Container(
+                          constraints: const BoxConstraints(maxWidth: 400),
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Row(
+                              children: [
+                                CircleAvatar(
+                                  backgroundColor: kWhite,
+                                  radius: 28,
+                                  child: CircleAvatar(
+                                    backgroundImage:
+                                        NetworkImage(user.profilePic),
+                                    radius: 26,
+                                  ),
+                                ),
+                                kWidth10,
+                                GestureDetector(
+                                  onTap: () {
+                                    customRoutePush(
+                                        context,
+                                        UserProfielScreen(
+                                          userId: user.id,
+                                          user: user,
+                                        ));
+                                  },
+                                  child: Text(
+                                    user.userName,
+                                    style: const TextStyle(
+                                        fontWeight: FontWeight.w500,
+                                        fontSize: 16),
+                                  ),
+                                ),
+                                const Spacer(),
+                                GestureDetector(
+                                  onTap: () {
+                                    context.read<FollowUnfollowUserBloc>().add(
+                                        FollowUserButtonClickEvent(
+                                            followeesId: user.id));
+                                    suggessionModel.data.removeWhere(
+                                        (element) => element.id == user.id);
+                                    suggessionModel.total--;
+                                  },
+                                  child: Container(
+                                    height: 28,
+                                    width: 70,
+                                    decoration: const BoxDecoration(
+                                        color: kBlue,
+                                        borderRadius: BorderRadius.all(
+                                            Radius.circular(5))),
+                                    child: const Center(
+                                        child: Text(
+                                      'Follow',
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.w500,
+                                          color: kWhite),
+                                    )),
+                                  ),
+                                )
+                              ],
                             ),
-                            kWidth10,
-                            GestureDetector(
-                              onTap: () {
-                                customRoutePush(
-                                    context,
-                                    UserProfielScreen(
-                                      userId: user.id,
-                                      user: user,
-                                    ));
-                              },
-                              child: Text(
-                                user.userName,
-                                style: const TextStyle(
-                                    fontWeight: FontWeight.w500, fontSize: 16),
-                              ),
-                            ),
-                            const Spacer(),
-                            GestureDetector(
-                              onTap: () {
-                                context.read<FollowUnfollowUserBloc>().add(
-                                    FollowUserButtonClickEvent(
-                                        followeesId: user.id));
-                                suggessionModel.data.removeWhere(
-                                    (element) => element.id == user.id);
-                                suggessionModel.total--;
-                              },
-                              child: Container(
-                                height: 28,
-                                width: 70,
-                                decoration: const BoxDecoration(
-                                    color: kBlue,
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(5))),
-                                child: const Center(
-                                    child: Text(
-                                  'Follow',
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.w500,
-                                      color: kWhite),
-                                )),
-                              ),
-                            )
-                          ],
+                          ),
                         ),
                       );
                     });

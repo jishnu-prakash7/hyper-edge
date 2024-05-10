@@ -99,108 +99,113 @@ class _PostEditScreenState extends State<PostEditScreen> {
           return Form(
             key: _formkey,
             child: SingleChildScrollView(
-              child: Column(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      height: 250,
-                      width: MediaQuery.of(context).size.width,
-                      child: Stack(
-                        children: [
-                          selectedAssetList.isEmpty
-                              ? Image.network(
-                                  width: MediaQuery.of(context).size.width,
-                                  widget.post.image,
-                                  height: 250,
-                                  fit: BoxFit.fill,
-                                )
-                              : PageView.builder(
-                                  itemCount: selectedAssetList.length,
-                                  itemBuilder: (context, index) {
-                                    AssetEntity assetEntity =
-                                        selectedAssetList[index];
-                                    return AssetEntityImage(
+              child: Center(
+                child: Container(
+                  constraints:const BoxConstraints(maxWidth: 500),
+                  child: Column(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          height: 250,
+                          width: MediaQuery.of(context).size.width,
+                          child: Stack(
+                            children: [
+                              selectedAssetList.isEmpty
+                                  ? Image.network(
+                                      width: MediaQuery.of(context).size.width,
+                                      widget.post.image,
+                                      height: 250,
                                       fit: BoxFit.fill,
-                                      assetEntity,
-                                      isOriginal: false,
-                                    );
-                                  },
+                                    )
+                                  : PageView.builder(
+                                      itemCount: selectedAssetList.length,
+                                      itemBuilder: (context, index) {
+                                        AssetEntity assetEntity =
+                                            selectedAssetList[index];
+                                        return AssetEntityImage(
+                                          fit: BoxFit.fill,
+                                          assetEntity,
+                                          isOriginal: false,
+                                        );
+                                      },
+                                    ),
+                              Positioned(
+                                left: MediaQuery.of(context).size.width - 50,
+                                top: 210,
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(6.0),
+                                  ),
+                                  child: GestureDetector(
+                                    onTap: () {
+                                      pickAssets(
+                                        maxcount: 10,
+                                        requestType: RequestType.common,
+                                      );
+                                    },
+                                    child: const Icon(
+                                      Iconsax.edit5,
+                                      size: 25,
+                                      color: kBlack,
+                                    ),
+                                  ),
                                 ),
-                          Positioned(
-                            left: MediaQuery.of(context).size.width - 50,
-                            top: 210,
-                            child: Container(
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(6.0),
-                              ),
-                              child: GestureDetector(
-                                onTap: () {
-                                  pickAssets(
-                                    maxcount: 10,
-                                    requestType: RequestType.common,
-                                  );
-                                },
-                                child: const Icon(
-                                  Iconsax.edit5,
-                                  size: 25,
-                                  color: kBlack,
-                                ),
-                              ),
-                            ),
-                          )
-                        ],
+                              )
+                            ],
+                          ),
+                        ),
                       ),
-                    ),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Column(
+                          children: [
+                            profileAndAddPostTextfield(
+                                labelText: 'Description',
+                                height: 120,
+                                controller: descriptionController,
+                                fieldEmptyMessage: 'Description cannot be empty!',
+                                validationMessage:
+                                    ' field must contains atleast one letter!',
+                                regEx: descriptionValidator),
+                            kheight20,
+                            state is EditPostLoadingState
+                                ? loadingElevatedButton(context)
+                                : customElevatedButton(
+                                    context,
+                                    backgroundColor: kBlack,
+                                    textColor: kWhite,
+                                    title: 'Update',
+                                    onpressed: () {
+                                      if (_formkey.currentState!.validate()) {
+                                        editPostBloc.add(
+                                          EditPostButtonClickEvent(
+                                            image: selectedAssetList.isEmpty
+                                                ? image
+                                                : selectedAssetList[0],
+                                            description: descriptionController.text,
+                                            postId: widget.post.id,
+                                            imageUrl: selectedAssetList.isEmpty
+                                                ? image
+                                                : '',
+                                          ),
+                                        );
+                                      } else {
+                                        customSnackBar(context,
+                                            'Please select an image', kRed);
+                                      }
+                                    },
+                                  ),
+                          ],
+                        ),
+                      ),
+                    ],
                   ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Column(
-                      children: [
-                        profileAndAddPostTextfield(
-                            labelText: 'Description',
-                            height: 120,
-                            controller: descriptionController,
-                            fieldEmptyMessage: 'Description cannot be empty!',
-                            validationMessage:
-                                ' field must contains atleast one letter!',
-                            regEx: descriptionValidator),
-                        kheight20,
-                        state is EditPostLoadingState
-                            ? loadingElevatedButton(context)
-                            : customElevatedButton(
-                                context,
-                                backgroundColor: kBlack,
-                                textColor: kWhite,
-                                title: 'Update',
-                                onpressed: () {
-                                  if (_formkey.currentState!.validate()) {
-                                    editPostBloc.add(
-                                      EditPostButtonClickEvent(
-                                        image: selectedAssetList.isEmpty
-                                            ? image
-                                            : selectedAssetList[0],
-                                        description: descriptionController.text,
-                                        postId: widget.post.id,
-                                        imageUrl: selectedAssetList.isEmpty
-                                            ? image
-                                            : '',
-                                      ),
-                                    );
-                                  } else {
-                                    customSnackBar(context,
-                                        'Please select an image', kRed);
-                                  }
-                                },
-                              ),
-                      ],
-                    ),
-                  ),
-                ],
+                ),
               ),
             ),
           );

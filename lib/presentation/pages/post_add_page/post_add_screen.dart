@@ -84,125 +84,130 @@ class AddPostdScreenState extends State<AddPostdScreen> {
           return Form(
             key: _formkey,
             child: SingleChildScrollView(
-              child: Column(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Container(
-                      decoration: BoxDecoration(
-                        // border: Border.all(width: .5),
-                        color: kWhite,
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      height: 250,
-                      width: MediaQuery.of(context).size.width,
-                      child: Stack(
-                        children: [
-                          selectedAssetList.isEmpty
-                              ? Center(
-                                  child: ElevatedButton(
-                                    onPressed: () {
-                                      pickAssets(
-                                        maxcount: 10,
-                                        requestType: RequestType.common,
-                                      );
-                                    },
-                                    style: ButtonStyle(
-                                      backgroundColor:
-                                          const MaterialStatePropertyAll(
-                                              kWhite),
-                                      shape: MaterialStateProperty.all(
-                                        RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(10.0),
-                                          side: const BorderSide(color: kBlack),
+              child: Center(
+                child: Container(
+                  constraints:const BoxConstraints(maxWidth: 500),
+                  child: Column(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Container(
+                          decoration: BoxDecoration(
+                            // border: Border.all(width: .5),
+                            color: kWhite,
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          height: 250,
+                          width: MediaQuery.of(context).size.width,
+                          child: Stack(
+                            children: [
+                              selectedAssetList.isEmpty
+                                  ? Center(
+                                      child: ElevatedButton(
+                                        onPressed: () {
+                                          pickAssets(
+                                            maxcount: 10,
+                                            requestType: RequestType.common,
+                                          );
+                                        },
+                                        style: ButtonStyle(
+                                          backgroundColor:
+                                              const MaterialStatePropertyAll(
+                                                  kWhite),
+                                          shape: MaterialStateProperty.all(
+                                            RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(10.0),
+                                              side: const BorderSide(color: kBlack),
+                                            ),
+                                          ),
+                                        ),
+                                        child: const Text(
+                                          'Choose Image',
+                                          style: TextStyle(color: kBlack),
                                         ),
                                       ),
-                                    ),
-                                    child: const Text(
-                                      'Choose Image',
-                                      style: TextStyle(color: kBlack),
-                                    ),
-                                  ),
-                                )
-                              : PageView.builder(
-                                  itemCount: selectedAssetList.length,
-                                  itemBuilder: (context, index) {
-                                    AssetEntity assetEntity =
-                                        selectedAssetList[index];
-                                    return AssetEntityImage(
-                                      fit: BoxFit.fill,
-                                      assetEntity,
-                                      isOriginal: false,
-                                    );
-                                  },
-                                ),
-                          selectedAssetList.isNotEmpty
-                              ? Positioned(
-                                  left: MediaQuery.of(context).size.width - 50,
-                                  top: 210,
-                                  child: Container(
-                                    decoration: BoxDecoration(
-                                      color: Colors.white,
-                                      borderRadius: BorderRadius.circular(6.0),
-                                    ),
-                                    child: GestureDetector(
-                                      onTap: () {
-                                        pickAssets(
-                                          maxcount: 10,
-                                          requestType: RequestType.common,
+                                    )
+                                  : PageView.builder(
+                                      itemCount: selectedAssetList.length,
+                                      itemBuilder: (context, index) {
+                                        AssetEntity assetEntity =
+                                            selectedAssetList[index];
+                                        return AssetEntityImage(
+                                          fit: BoxFit.fill,
+                                          assetEntity,
+                                          isOriginal: false,
                                         );
                                       },
-                                      child: const Icon(
-                                        Iconsax.edit5,
-                                        size: 25,
-                                        color: kBlack,
-                                      ),
                                     ),
-                                  ),
-                                )
-                              : const SizedBox()
-                        ],
+                              selectedAssetList.isNotEmpty
+                                  ? Positioned(
+                                      left: MediaQuery.of(context).size.width - 50,
+                                      top: 210,
+                                      child: Container(
+                                        decoration: BoxDecoration(
+                                          color: Colors.white,
+                                          borderRadius: BorderRadius.circular(6.0),
+                                        ),
+                                        child: GestureDetector(
+                                          onTap: () {
+                                            pickAssets(
+                                              maxcount: 10,
+                                              requestType: RequestType.common,
+                                            );
+                                          },
+                                          child: const Icon(
+                                            Iconsax.edit5,
+                                            size: 25,
+                                            color: kBlack,
+                                          ),
+                                        ),
+                                      ),
+                                    )
+                                  : const SizedBox()
+                            ],
+                          ),
+                        ),
                       ),
-                    ),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Column(
+                          children: [
+                            profileAndAddPostTextfield(
+                                labelText: 'Description',
+                                height: 120,
+                                controller: descriptionController,
+                                fieldEmptyMessage: 'Description cannot be empty!',
+                                validationMessage:
+                                    ' field must contains atleast one letter!',
+                                regEx: descriptionValidator),
+                            kheight20,
+                            state is AddPostLoadingState
+                                ? loadingElevatedButton(context)
+                                : customElevatedButton(
+                                    context,
+                                    backgroundColor: kBlack,
+                                    textColor: kWhite,
+                                    title: 'Post',
+                                    onpressed: () async {
+                                      if (_formkey.currentState!.validate() &&
+                                          selectedAssetList.isNotEmpty) {
+                                        addpostBloc.add(AddpostButtonClickEvent(
+                                            image: selectedAssetList[0],
+                                            description:
+                                                descriptionController.text));
+                                      } else {
+                                        customSnackBar(context,
+                                            'Please select an image', kRed);
+                                      }
+                                    },
+                                  ),
+                          ],
+                        ),
+                      ),
+                    ],
                   ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Column(
-                      children: [
-                        profileAndAddPostTextfield(
-                            labelText: 'Description',
-                            height: 120,
-                            controller: descriptionController,
-                            fieldEmptyMessage: 'Description cannot be empty!',
-                            validationMessage:
-                                ' field must contains atleast one letter!',
-                            regEx: descriptionValidator),
-                        kheight20,
-                        state is AddPostLoadingState
-                            ? loadingElevatedButton(context)
-                            : customElevatedButton(
-                                context,
-                                backgroundColor: kBlack,
-                                textColor: kWhite,
-                                title: 'Post',
-                                onpressed: () async {
-                                  if (_formkey.currentState!.validate() &&
-                                      selectedAssetList.isNotEmpty) {
-                                    addpostBloc.add(AddpostButtonClickEvent(
-                                        image: selectedAssetList[0],
-                                        description:
-                                            descriptionController.text));
-                                  } else {
-                                    customSnackBar(context,
-                                        'Please select an image', kRed);
-                                  }
-                                },
-                              ),
-                      ],
-                    ),
-                  ),
-                ],
+                ),
               ),
             ),
           );

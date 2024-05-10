@@ -55,17 +55,20 @@ class _MessageScreenState extends State<MessageScreen> {
         title: appbarTitle(title: 'Messages', fontWeight: FontWeight.w600),
         bottom: PreferredSize(
           preferredSize: const Size.fromHeight(60),
-          child: SizedBox(
-            width: MediaQuery.of(context).size.width - 20,
-            child: SearchBar(
-              backgroundColor: const MaterialStatePropertyAll(kWhite),
-              leading: const Icon(Icons.search),
-              onChanged: (value) {
-                onchanged = value;
-                setState(() {});
-              },
-              controller: searchController,
-              hintText: 'Search...',
+          child: Center(
+            child: Container(
+              constraints: const BoxConstraints(maxWidth: 500),
+              width: MediaQuery.of(context).size.width - 20,
+              child: SearchBar(
+                backgroundColor: const MaterialStatePropertyAll(kWhite),
+                leading: const Icon(Icons.search),
+                onChanged: (value) {
+                  onchanged = value;
+                  setState(() {});
+                },
+                controller: searchController,
+                hintText: 'Search...',
+              ),
             ),
           ),
         ),
@@ -116,20 +119,25 @@ class _MessageScreenState extends State<MessageScreen> {
                         final ConversationModel conversation =
                             conversations[index];
                         final user = filteredUsers[index];
-                        return GestureDetector(
-                          onTap: () {
-                            customRoutePush(
-                                context,
-                                ChatScreen(
-                                  recieverid: user.id,
-                                  name: user.userName,
-                                  profilepic: user.profilePic,
-                                  conversationId: conversation.id,
-                                ));
-                          },
-                          child: CustomCard(
-                            user: user,
-                            conversation: conversation,
+                        return Center(
+                          child: Container(
+                            constraints: const BoxConstraints(maxWidth: 500),
+                            child: GestureDetector(
+                              onTap: () {
+                                customRoutePush(
+                                    context,
+                                    ChatScreen(
+                                      recieverid: user.id,
+                                      name: user.userName,
+                                      profilepic: user.profilePic,
+                                      conversationId: conversation.id,
+                                    ));
+                              },
+                              child: CustomCard(
+                                user: user,
+                                conversation: conversation,
+                              ),
+                            ),
                           ),
                         );
                       });

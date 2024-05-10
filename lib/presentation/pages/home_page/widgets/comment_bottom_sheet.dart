@@ -16,6 +16,8 @@ import 'package:timeago/timeago.dart' as timeago;
 Future<dynamic> commentBottomSheet(
     BuildContext context, post, TextEditingController commentController,
     {required GlobalKey<FormState> formkey,
+    required String profiePic,
+    required String userName,
     required List<Comment> comments,
     required String id}) {
   return showModalBottomSheet(
@@ -28,7 +30,7 @@ Future<dynamic> commentBottomSheet(
           Row(
             children: [
               CircleAvatar(
-                backgroundImage: NetworkImage(post.userId.profilePic),
+                backgroundImage: NetworkImage(profiePic),
                 backgroundColor: kTeal,
                 radius: 25,
               ),
@@ -75,7 +77,7 @@ Future<dynamic> commentBottomSheet(
                           if (formkey.currentState!.validate()) {
                             context.read<CommentPostBloc>().add(
                                   CommentPostButtonClickEvent(
-                                      userName: post.userId.userName,
+                                      userName:userName,
                                       postId: id,
                                       content: commentController.text),
                                 );

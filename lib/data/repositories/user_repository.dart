@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'dart:developer';
 
 import 'package:flutter/widgets.dart';
-import 'package:social_media/core/utils/urls.dart';
+import 'package:social_media/core/utils/api_end_points.dart';
 import 'package:social_media/data/repositories/post_repository.dart';
 import 'package:social_media/presentation/widgets/common_widgets.dart';
 import 'package:http/http.dart' as http;

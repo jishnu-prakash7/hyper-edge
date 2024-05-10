@@ -84,95 +84,107 @@ class _OtpScreenState extends State<OtpScreen> {
               },
             ),
           ],
-          child: Padding(
-            padding: const EdgeInsets.only(left: 10),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Text(
-                  'Verification code',
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
-                ),
-                kheight20,
-                const Text(
-                  'We have send the code varification to',
-                  style: TextStyle(
-                      fontSize: 15, fontWeight: FontWeight.w500, color: kGrey),
-                ),
-                kheight10,
-                Text(
-                  widget.user.email.isNotEmpty
-                      ? widget.user.email
-                      : 'Email not available',
-                  style: const TextStyle(
-                      fontSize: 15, fontWeight: FontWeight.w500, color: kBlack),
-                ),
-                kheight40,
-                OtpTextField(
-                  enabledBorderColor: const Color.fromARGB(255, 173, 173, 173),
-                  focusedBorderColor: kBlack, 
-                  fieldWidth: 50,
-                  numberOfFields: 4,
-                  showFieldAsBox: true,
-                  onCodeChanged: (String code) {},
-                  onSubmit: (String verificationCode) {
-                    enteredOtp = verificationCode;
-                  },
-                ),
-                kheight20,
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
+          child: Center(
+            child: Container(
+              constraints: const BoxConstraints(maxWidth: 300),
+              child: Padding(
+                padding: const EdgeInsets.only(left: 10),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const Text(
-                      "Haven't received OTP yet?",
-                      style: TextStyle(fontWeight: FontWeight.w500),
+                      'Verification code',
+                      style:
+                          TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
                     ),
-                    kWidth10,
-                    resendTime == 0
-                        ? InkWell(
-                            onTap: () {
-                              signupbloc
-                                  .add(UserSignupEvent(user: widget.user));
-                            },
-                            child: const Text(
-                              "Resend",
-                              style: TextStyle(
-                                  color: Colors.blue,
-                                  fontWeight: FontWeight.w500),
-                            ),
-                          )
-                        : Text(
-                            '$resendTime sec',
-                            style: const TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: Color.fromARGB(255, 254, 36, 21)),
-                          )
+                    kheight20,
+                    const Text(
+                      'We have send the code varification to',
+                      style: TextStyle(
+                          fontSize: 15,
+                          fontWeight: FontWeight.w500,
+                          color: kGrey),
+                    ),
+                    kheight10,
+                    Text(
+                      widget.user.email.isNotEmpty
+                          ? widget.user.email
+                          : 'Email not available',
+                      style: const TextStyle(
+                          fontSize: 15,
+                          fontWeight: FontWeight.w500,
+                          color: kBlack),
+                    ),
+                    kheight40,
+                    OtpTextField(
+                      enabledBorderColor:
+                          const Color.fromARGB(255, 173, 173, 173),
+                      focusedBorderColor: kBlack,
+                      fieldWidth: 50,
+                      numberOfFields: 4,
+                      showFieldAsBox: true,
+                      onCodeChanged: (String code) {},
+                      onSubmit: (String verificationCode) {
+                        enteredOtp = verificationCode;
+                      },
+                    ),
+                    kheight20,
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Text(
+                          "Haven't received OTP yet?",
+                          style: TextStyle(fontWeight: FontWeight.w500),
+                        ),
+                        kWidth10,
+                        resendTime == 0
+                            ? InkWell(
+                                onTap: () {
+                                  signupbloc
+                                      .add(UserSignupEvent(user: widget.user));
+                                },
+                                child: const Text(
+                                  "Resend",
+                                  style: TextStyle(
+                                      color: Colors.blue,
+                                      fontWeight: FontWeight.w500),
+                                ),
+                              )
+                            : Text(
+                                '$resendTime sec',
+                                style: const TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: Color.fromARGB(255, 254, 36, 21)),
+                              )
+                      ],
+                    ),
+                    kheight40,
+                    BlocBuilder<OtpBloc, OtpState>(
+                      builder: (context, state) {
+                        return state is OtpVarifyLoadingState
+                            ? loadingElevatedButton(context)
+                            : customElevatedButton(context,
+                                backgroundColor: kBlack,
+                                textColor: kWhite,
+                                title: 'Verify', onpressed: () {
+                                debugPrint(enteredOtp);
+                                if (enteredOtp.length == 4) {
+                                  otpBloc.add(OtpVerifyEvent(
+                                      email: widget.user.email,
+                                      otp: enteredOtp));
+                                } else if (enteredOtp.isNotEmpty) {
+                                  customSnackBar(context,
+                                      'Enter your 4 digit OTP', Colors.red);
+                                } else {
+                                  customSnackBar(
+                                      context, 'No OTP entered', Colors.red);
+                                }
+                              });
+                      },
+                    ),
                   ],
                 ),
-                kheight40,
-                BlocBuilder<OtpBloc, OtpState>(
-                  builder: (context, state) {
-                    return state is OtpVarifyLoadingState
-                        ? loadingElevatedButton(context)
-                        : customElevatedButton(context,
-                            backgroundColor: kBlack,
-                            textColor: kWhite,
-                            title: 'Verify', onpressed: () {
-                            debugPrint(enteredOtp);
-                            if (enteredOtp.length == 4) {
-                              otpBloc.add(OtpVerifyEvent(
-                                  email: widget.user.email, otp: enteredOtp));
-                            } else if (enteredOtp.isNotEmpty) {
-                              customSnackBar(context, 'Enter your 4 digit OTP',
-                                  Colors.red);
-                            } else {
-                              customSnackBar(
-                                  context, 'No OTP entered', Colors.red);
-                            }
-                          });
-                  },
-                ),
-              ],
+              ),
             ),
           ),
         ),

@@ -87,59 +87,66 @@ class _FollowingScreenState extends State<FollowingScreen> {
                     itemCount: followingsModel.totalCount,
                     itemBuilder: (context, index) {
                       final Following following = followings[index];
-                      return GestureDetector(
-                        onTap: () {
-                          customRoutePush(
-                              context,
-                              UserProfielScreen(
-                                  userId: following.id, user: following));
-                        },
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Row(
-                            children: [
-                              CircleAvatar(
-                                backgroundColor: kWhite,
-                                radius: 28,
-                                child: CircleAvatar(
-                                  backgroundImage:
-                                      NetworkImage(following.profilePic),
-                                  radius: 26,
-                                ),
-                              ),
-                              kWidth10,
-                              Text(
-                                following.userName,
-                                style: const TextStyle(
-                                    fontWeight: FontWeight.w500, fontSize: 16),
-                              ),
-                              const Spacer(),
-                              GestureDetector(
-                                onTap: () {
-                                  context.read<FollowUnfollowUserBloc>().add(
-                                      UnFollowUserButtonClickEvent(
-                                          followeesId: following.id));
-                                  followings.removeWhere(
-                                      (element) => element.id == following.id);
-                                  followingsModel.totalCount--;
-                                },
-                                child: Container(
-                                  height: 28,
-                                  width: 70,
-                                  decoration: const BoxDecoration(
-                                      color: kWhite,
-                                      borderRadius:
-                                          BorderRadius.all(Radius.circular(5))),
-                                  child: const Center(
-                                      child: Text(
-                                    'Unfollow',
-                                    style: TextStyle(
+                      return Center(
+                        child: Container(
+                          constraints: const BoxConstraints(maxWidth: 500),
+                          child: GestureDetector(
+                            onTap: () {
+                              customRoutePush(
+                                  context,
+                                  UserProfielScreen(
+                                      userId: following.id, user: following));
+                            },
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Row(
+                                children: [
+                                  CircleAvatar(
+                                    backgroundColor: kWhite,
+                                    radius: 28,
+                                    child: CircleAvatar(
+                                      backgroundImage:
+                                          NetworkImage(following.profilePic),
+                                      radius: 26,
+                                    ),
+                                  ),
+                                  kWidth10,
+                                  Text(
+                                    following.userName,
+                                    style: const TextStyle(
                                         fontWeight: FontWeight.w500,
-                                        color: kBlack),
-                                  )),
-                                ),
-                              )
-                            ],
+                                        fontSize: 16),
+                                  ),
+                                  const Spacer(),
+                                  GestureDetector(
+                                    onTap: () {
+                                      context
+                                          .read<FollowUnfollowUserBloc>()
+                                          .add(UnFollowUserButtonClickEvent(
+                                              followeesId: following.id));
+                                      followings.removeWhere((element) =>
+                                          element.id == following.id);
+                                      followingsModel.totalCount--;
+                                    },
+                                    child: Container(
+                                      height: 28,
+                                      width: 70,
+                                      decoration: const BoxDecoration(
+                                          color: kWhite,
+                                          borderRadius: BorderRadius.all(
+                                              Radius.circular(5))),
+                                      child: const Center(
+                                          child: Text(
+                                        'Unfollow',
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.w500,
+                                            color: kBlack),
+                                      )),
+                                    ),
+                                  )
+                                ],
+                              ),
+                            ),
                           ),
                         ),
                       );

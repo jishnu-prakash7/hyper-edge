@@ -44,25 +44,28 @@ class _ExploreScreenState extends State<ExploreScreen> {
             const IconThemeData(color: Color.fromARGB(255, 233, 230, 230)),
         bottom: PreferredSize(
           preferredSize: const Size.fromHeight(60),
-          child: SizedBox(
-            width: MediaQuery.of(context).size.width - 30,
-            child: Searchbar(
-              searchController: searchController,
-              onTextChanged: (String value) {
-                // context
-                //     .read<FetchExplorePostBloc>()
-                //     .add((ExplorePostInitialFetchEvent()));
-                setState(() {
-                  onchangevalue = value;
-                });
-                if (value.isNotEmpty) {
-                  _debouncer.run(() {
-                    context
-                        .read<SearchAllUsersBloc>()
-                        .add(SearchUserInitilEvent(query: value));
+          child: Center(
+            child: Container(
+              constraints: const BoxConstraints(maxWidth: 480),
+              width: MediaQuery.of(context).size.width - 30,
+              child: Searchbar(
+                searchController: searchController,
+                onTextChanged: (String value) {
+                  // context
+                  //     .read<FetchExplorePostBloc>()
+                  //     .add((ExplorePostInitialFetchEvent()));
+                  setState(() {
+                    onchangevalue = value;
                   });
-                }
-              },
+                  if (value.isNotEmpty) {
+                    _debouncer.run(() {
+                      context
+                          .read<SearchAllUsersBloc>()
+                          .add(SearchUserInitilEvent(query: value));
+                    });
+                  }
+                },
+              ),
             ),
           ),
         ),
@@ -72,31 +75,41 @@ class _ExploreScreenState extends State<ExploreScreen> {
         builder: (context, state) {
           if (state is FetchExplorePostSuccesfulState) {
             if (onchangevalue.isEmpty) {
-              return Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: MasonryGridView.builder(
-                    gridDelegate:
-                        const SliverSimpleGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 2),
-                    itemCount: state.posts.length,
-                    itemBuilder: (context, index) {
-                      final ExplorePostModel post = state.posts[index];
-                      return GestureDetector(
-                        onTap: () {
-                          customRoutePush(
-                              context,
-                              ExplorePostDetailedViewScreen(
-                                  initialIndex: index));
-                        },
-                        child: Padding(
-                          padding: const EdgeInsets.all(2),
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(5),
-                            child: Image.network(post.image),
-                          ),
-                        ),
-                      );
-                    }),
+              return Center(
+                child: Container(
+                  constraints: const BoxConstraints(maxWidth: 500),
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: MasonryGridView.builder(
+                        gridDelegate:
+                            const SliverSimpleGridDelegateWithFixedCrossAxisCount(
+                                crossAxisCount: 2),
+                        itemCount: state.posts.length,
+                        itemBuilder: (context, index) {
+                          final ExplorePostModel post = state.posts[index];
+                          return Center(
+                            child: Container(
+                              constraints: const BoxConstraints(maxWidth: 500),
+                              child: GestureDetector(
+                                onTap: () {
+                                  customRoutePush(
+                                      context,
+                                      ExplorePostDetailedViewScreen(
+                                          initialIndex: index));
+                                },
+                                child: Padding(
+                                  padding: const EdgeInsets.all(2),
+                                  child: ClipRRect(
+                                    borderRadius: BorderRadius.circular(5),
+                                    child: Image.network(post.image),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          );
+                        }),
+                  ),
+                ),
               );
             } else {
               return BlocBuilder<SearchAllUsersBloc, SearchAllUsersState>(
@@ -113,34 +126,40 @@ class _ExploreScreenState extends State<ExploreScreen> {
                             itemCount: state.users.length,
                             itemBuilder: (context, index) {
                               final user = state.users[index];
-                              return GestureDetector(
-                                onTap: () {
-                                  customRoutePush(
-                                      context,
-                                      UserProfielScreen(
-                                          userId: user.id, user: user));
-                                },
-                                child: Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Row(
-                                    children: [
-                                      CircleAvatar(
-                                        backgroundColor: kWhite,
-                                        radius: 28,
-                                        child: CircleAvatar(
-                                          backgroundImage:
-                                              NetworkImage(user.profilePic),
-                                          radius: 26,
-                                        ),
+                              return Center(
+                                child: Container(
+                                  constraints:
+                                      const BoxConstraints(maxWidth: 500),
+                                  child: GestureDetector(
+                                    onTap: () {
+                                      customRoutePush(
+                                          context,
+                                          UserProfielScreen(
+                                              userId: user.id, user: user));
+                                    },
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Row(
+                                        children: [
+                                          CircleAvatar(
+                                            backgroundColor: kWhite,
+                                            radius: 28,
+                                            child: CircleAvatar(
+                                              backgroundImage:
+                                                  NetworkImage(user.profilePic),
+                                              radius: 26,
+                                            ),
+                                          ),
+                                          kWidth10,
+                                          Text(
+                                            user.userName,
+                                            style: const TextStyle(
+                                                fontWeight: FontWeight.w500,
+                                                fontSize: 16),
+                                          ),
+                                        ],
                                       ),
-                                      kWidth10,
-                                      Text(
-                                        user.userName,
-                                        style: const TextStyle(
-                                            fontWeight: FontWeight.w500,
-                                            fontSize: 16),
-                                      ),
-                                    ],
+                                    ),
                                   ),
                                 ),
                               );

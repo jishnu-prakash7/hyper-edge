@@ -58,43 +58,48 @@ class _NewChatScreenState extends State<NewChatScreen> {
                       final Following following = followings.following[index];
                       return Padding(
                         padding: const EdgeInsets.all(8.0),
-                        child: GestureDetector(
-                          onTap: () {
-                            context.read<ConversationBloc>().add(
-                                CreateConversationButtonClickEvent(
-                                    members: [logginedUserId, following.id]));
-                            if (state[1] is ConversationSuccesfulState) {
-                              context
-                                  .read<FetchAllConversationsBloc>()
-                                  .add(AllConversationsInitialFetchEvent());
-                              customRoutePush(
-                                  context,
-                                  ChatScreen(
-                                    recieverid: following.id,
-                                    name: following.userName,
-                                    profilepic: following.profilePic,
-                                    conversationId: state[1].conversationId,
-                                  ));
-                            }
-                          },
-                          child: Row(
-                            children: [
-                              CircleAvatar(
-                                backgroundColor: kWhite,
-                                radius: 28,
-                                child: CircleAvatar(
-                                  backgroundImage:
-                                      NetworkImage(following.profilePic),
-                                  radius: 26,
-                                ),
+                        child: Center(
+                          child: Container(
+                            constraints:const BoxConstraints(maxWidth: 500),
+                            child: GestureDetector(
+                              onTap: () {
+                                context.read<ConversationBloc>().add(
+                                    CreateConversationButtonClickEvent(
+                                        members: [logginedUserId, following.id]));
+                                if (state[1] is ConversationSuccesfulState) {
+                                  context
+                                      .read<FetchAllConversationsBloc>()
+                                      .add(AllConversationsInitialFetchEvent());
+                                  customRoutePush(
+                                      context,
+                                      ChatScreen(
+                                        recieverid: following.id,
+                                        name: following.userName,
+                                        profilepic: following.profilePic,
+                                        conversationId: state[1].conversationId,
+                                      ));
+                                }
+                              },
+                              child: Row(
+                                children: [
+                                  CircleAvatar(
+                                    backgroundColor: kWhite,
+                                    radius: 28,
+                                    child: CircleAvatar(
+                                      backgroundImage:
+                                          NetworkImage(following.profilePic),
+                                      radius: 26,
+                                    ),
+                                  ),
+                                  kWidth10,
+                                  Text(
+                                    following.userName,
+                                    style: const TextStyle(
+                                        fontWeight: FontWeight.w500, fontSize: 16),
+                                  ),
+                                ],
                               ),
-                              kWidth10,
-                              Text(
-                                following.userName,
-                                style: const TextStyle(
-                                    fontWeight: FontWeight.w500, fontSize: 16),
-                              ),
-                            ],
+                            ),
                           ),
                         ),
                       );

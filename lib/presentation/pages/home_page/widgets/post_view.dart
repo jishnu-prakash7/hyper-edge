@@ -82,203 +82,210 @@ class _PostViewState extends State<PostView> {
                 : Container();
           } else {
             final FollwersPostModel post = widget.posts[index];
-            return Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Row(
-                    children: [
-                      CircleAvatar(
-                        radius: 20,
-                        backgroundImage: NetworkImage(post.userId.profilePic),
-                      ),
-                      kWidth10,
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          GestureDetector(
-                            onTap: () {
-                              customRoutePush(
-                                  context,
-                                  UserProfielScreen(
-                                    userId: post.userId.id,
-                                    user: post.userId,
-                                  ));
-                            },
-                            child: Text(
-                              post.userId.userName,
-                              style: const TextStyle(
-                                fontWeight: FontWeight.w600,
-                                fontSize: 17,
-                              ),
-                            ),
-                          ),
-                          Text(
-                            timeago.format(post.createdAt, locale: 'en'),
-                            style: const TextStyle(
-                              fontSize: 11,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          )
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-                Container(
-                  width: MediaQuery.of(context).size.width,
-                  constraints: const BoxConstraints(
-                      minHeight: 250, maxHeight: 400, maxWidth: 600),
-                  color: kWhite,
-                  child: Image(
-                    image: Image.network(
-                      post.image,
-                      loadingBuilder: (context, child, loadingProgress) {
-                        return detailsShimmerLoading(context);
-                      },
-                    ).image,
-                    fit: BoxFit.cover,
-                  ),
-                ),
-                MultiBlocBuilder(
-                  blocs: [
-                    context.watch<LikePostBloc>(),
-                    context.watch<FetchSavedPostsBloc>(),
-                    context.watch<SavedPostBloc>(),
-                  ],
-                  builder: (context, state) {
-                    var state2 = state[1];
-                    if (state2 is FetchSavedPostsSuccesfulState) {
-                      posts = state2.posts;
-                    }
-                    return Padding(
+            return Center(
+              child: Container(
+                constraints: const BoxConstraints(maxWidth: 500),
+                child: Column(
+                  children: [
+                    Padding(
                       padding: const EdgeInsets.all(8.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                      child: Row(
                         children: [
-                          Row(
+                          CircleAvatar(
+                            radius: 20,
+                            backgroundImage:
+                                NetworkImage(post.userId.profilePic),
+                          ),
+                          kWidth10,
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               GestureDetector(
                                 onTap: () {
-                                  final currentUserId = logginedUserId;
-                                  final isLiked = post.likes.any(
-                                      (user) => user.id == currentUserId);
-                                  if (!isLiked) {
-                                    post.likes.add(
-                                        FollowersUserIdModel.fromJson(
-                                            logginedUser!.toJson()));
-            
-                                    context.read<LikePostBloc>().add(
-                                        LikePostButtonClickEvent(
-                                            postId: post.id));
-                                  } else {
-                                    post.likes.removeWhere(
-                                        (user) => user.id == currentUserId);
-                                    context.read<LikePostBloc>().add(
-                                        UnlikePostButtonClickEvent(
-                                            postId: post.id));
-                                  }
-                                },
-                                child: Icon(
-                                  post.likes.any(
-                                          (user) => user.id == logginedUserId)
-                                      ? Iconsax.heart5
-                                      : Iconsax.heart4,
-                                  color: post.likes.any(
-                                          (user) => user.id == logginedUserId)
-                                      ? kRed
-                                      : null,
-                                ),
-                              ),
-                              kWidth10,
-                              GestureDetector(
-                                onTap: () {
-                                  context.read<GetCommentsBloc>().add(
-                                      CommentsFetchEvent(postId: post.id));
-                                  commentBottomSheet(
-                                      context, post, widget.commentController,
-                                      formkey: _formkey,
-                                      comments: _comments,
-                                      id: post.id);
-                                },
-                                child: const Icon(
-                                  Iconsax.message,
-                                ),
-                              ),
-                              kWidth10,
-                              const Spacer(),
-                              GestureDetector(
-                                onTap: () {
-                                  if (posts.any((element) =>
-                                      element.postId.id == post.id)) {
-                                    context.read<SavedPostBloc>().add(
-                                        RemoveSavedPostButtonClickEvent(
-                                            postId: post.id));
-                                    posts.removeWhere((element) =>
-                                        element.postId.id == post.id);
-                                  } else {
-                                    posts.add(SavedPostModel(
+                                  customRoutePush(
+                                      context,
+                                      UserProfielScreen(
                                         userId: post.userId.id,
-                                        postId: PostId(
-                                            id: post.id,
-                                            userId: UserId.fromJson(
-                                                post.userId.toJson()),
-                                            image: post.image,
-                                            description: post.description,
-                                            likes: post.likes,
-                                            hidden: post.hidden,
-                                            blocked: post.blocked,
-                                            tags: post.tags,
-                                            date: post.date,
-                                            createdAt: post.createdAt,
-                                            updatedAt: post.updatedAt,
-                                            v: post.v,
-                                            taggedUsers: post.taggedUsers),
-                                        createdAt: DateTime.now(),
-                                        updatedAt: DateTime.now(),
-                                        v: post.v));
-                                    context.read<SavedPostBloc>().add(
-                                        SavePostButtonClickEvent(
-                                            postId: post.id));
-                                  }
+                                        user: post.userId,
+                                      ));
                                 },
-                                child: Icon(
-                                  size: 26,
-                                  posts.any((element) =>
-                                          element.postId.id == post.id)
-                                      ? Icons.bookmark
-                                      : Icons.bookmark_border,
+                                child: Text(
+                                  post.userId.userName,
+                                  style: const TextStyle(
+                                    fontWeight: FontWeight.w600,
+                                    fontSize: 17,
+                                  ),
                                 ),
                               ),
+                              Text(
+                                timeago.format(post.createdAt, locale: 'en'),
+                                style: const TextStyle(
+                                  fontSize: 11,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              )
                             ],
                           ),
-                          kheight10,
-                          post.likes.isNotEmpty
-                              ? Text(
-                                  '${post.likes.length} likes',
-                                  style: const TextStyle(
-                                    fontSize: 15,
-                                    fontWeight: FontWeight.w500,
-                                  ),
-                                )
-                              : const SizedBox(),
-                          ReadMoreText(
-                            post.description,
-                            trimMode: TrimMode.Line,
-                            trimLines: 2,
-                            colorClickableText: Colors.pink,
-                            trimCollapsedText: 'more',
-                            trimExpandedText: 'less',
-                            moreStyle: const TextStyle(
-                                fontSize: 14, fontWeight: FontWeight.w500),
-                          )
                         ],
                       ),
-                    );
-                  },
-                )
-              ],
+                    ),
+                    Container(
+                      width: MediaQuery.of(context).size.width,
+                      constraints: const BoxConstraints(
+                          minHeight: 250, maxHeight: 400, maxWidth: 600),
+                      color: kWhite,
+                      child: Image(
+                        image: Image.network(
+                          post.image,
+                          loadingBuilder: (context, child, loadingProgress) {
+                            return detailsShimmerLoading(context);
+                          },
+                        ).image,
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                    MultiBlocBuilder(
+                      blocs: [
+                        context.watch<LikePostBloc>(),
+                        context.watch<FetchSavedPostsBloc>(),
+                        context.watch<SavedPostBloc>(),
+                      ],
+                      builder: (context, state) {
+                        var state2 = state[1];
+                        if (state2 is FetchSavedPostsSuccesfulState) {
+                          posts = state2.posts;
+                        }
+                        return Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                children: [
+                                  GestureDetector(
+                                    onTap: () {
+                                      final currentUserId = logginedUserId;
+                                      final isLiked = post.likes.any(
+                                          (user) => user.id == currentUserId);
+                                      if (!isLiked) {
+                                        post.likes.add(
+                                            FollowersUserIdModel.fromJson(
+                                                logginedUser!.toJson()));
+
+                                        context.read<LikePostBloc>().add(
+                                            LikePostButtonClickEvent(
+                                                postId: post.id));
+                                      } else {
+                                        post.likes.removeWhere(
+                                            (user) => user.id == currentUserId);
+                                        context.read<LikePostBloc>().add(
+                                            UnlikePostButtonClickEvent(
+                                                postId: post.id));
+                                      }
+                                    },
+                                    child: Icon(
+                                      post.likes.any((user) =>
+                                              user.id == logginedUserId)
+                                          ? Iconsax.heart5
+                                          : Iconsax.heart4,
+                                      color: post.likes.any((user) =>
+                                              user.id == logginedUserId)
+                                          ? kRed
+                                          : null,
+                                    ),
+                                  ),
+                                  kWidth10,
+                                  GestureDetector(
+                                    onTap: () {
+                                      context.read<GetCommentsBloc>().add(
+                                          CommentsFetchEvent(postId: post.id));
+                                      commentBottomSheet(context, post,
+                                          widget.commentController,
+                                          formkey: _formkey,
+                                          userName: post.userId.userName,
+                                          profiePic: post.userId.profilePic,
+                                          comments: _comments,
+                                          id: post.id);
+                                    },
+                                    child: const Icon(
+                                      Iconsax.message,
+                                    ),
+                                  ),
+                                  kWidth10,
+                                  const Spacer(),
+                                  GestureDetector(
+                                    onTap: () {
+                                      if (posts.any((element) =>
+                                          element.postId.id == post.id)) {
+                                        context.read<SavedPostBloc>().add(
+                                            RemoveSavedPostButtonClickEvent(
+                                                postId: post.id));
+                                        posts.removeWhere((element) =>
+                                            element.postId.id == post.id);
+                                      } else {
+                                        posts.add(SavedPostModel(
+                                            userId: post.userId.id,
+                                            postId: PostId(
+                                                id: post.id,
+                                                userId: UserId.fromJson(
+                                                    post.userId.toJson()),
+                                                image: post.image,
+                                                description: post.description,
+                                                likes: post.likes,
+                                                hidden: post.hidden,
+                                                blocked: post.blocked,
+                                                tags: post.tags,
+                                                date: post.date,
+                                                createdAt: post.createdAt,
+                                                updatedAt: post.updatedAt,
+                                                v: post.v,
+                                                taggedUsers: post.taggedUsers),
+                                            createdAt: DateTime.now(),
+                                            updatedAt: DateTime.now(),
+                                            v: post.v));
+                                        context.read<SavedPostBloc>().add(
+                                            SavePostButtonClickEvent(
+                                                postId: post.id));
+                                      }
+                                    },
+                                    child: Icon(
+                                      size: 26,
+                                      posts.any((element) =>
+                                              element.postId.id == post.id)
+                                          ? Icons.bookmark
+                                          : Icons.bookmark_border,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              kheight10,
+                              post.likes.isNotEmpty
+                                  ? Text(
+                                      '${post.likes.length} likes',
+                                      style: const TextStyle(
+                                        fontSize: 15,
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                    )
+                                  : const SizedBox(),
+                              ReadMoreText(
+                                post.description,
+                                trimMode: TrimMode.Line,
+                                trimLines: 2,
+                                colorClickableText: Colors.pink,
+                                trimCollapsedText: 'more',
+                                trimExpandedText: 'less',
+                                moreStyle: const TextStyle(
+                                    fontSize: 14, fontWeight: FontWeight.w500),
+                              )
+                            ],
+                          ),
+                        );
+                      },
+                    )
+                  ],
+                ),
+              ),
             );
           }
         },

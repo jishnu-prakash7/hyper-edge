@@ -1,5 +1,4 @@
-
-  import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:social_media/core/colors.dart';
 import 'package:social_media/core/constants.dart';
 import 'package:social_media/domain/models/postuser_model.dart';
@@ -10,17 +9,20 @@ import 'package:social_media/presentation/pages/profile_page/widgets/post_detail
 import 'package:social_media/presentation/widgets/common_widgets.dart';
 
 Positioned profileDetailsSection(BuildContext context,
-      {String? bio,
-      required String userName,
-      required String followersCount,
-      required String followingsCount,
-      required String postCount,
-      required User user}) {
-    return Positioned(
-      left: 20,
-      top: 130,
-      width: MediaQuery.of(context).size.width - 40,
+    {String? bio,
+    required String userName,
+    required String followersCount,
+    required String followingsCount,
+    required String postCount,
+    required User user}) {
+  return Positioned(
+    left: 20,
+    top: 130,
+    width: MediaQuery.of(context).size.width - 40,
+    child: Align(
+      alignment: Alignment.centerLeft,
       child: Container(
+        constraints: const BoxConstraints(maxWidth: 460),
         decoration: BoxDecoration(borderRadius: kborderRadius5, color: kWhite),
         width: MediaQuery.of(context).size.width,
         height: 200,
@@ -126,6 +128,6 @@ Positioned profileDetailsSection(BuildContext context,
           ],
         ),
       ),
-    );
-  }
-
+    ),
+  );
+}
